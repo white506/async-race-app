@@ -59,7 +59,7 @@ const Garage = () => {
       <h1>Garage</h1>
       <CarForm onSubmit={editingCar ? handleUpdate : handleCreate} initialData={editingCar || undefined} />
       {cars.length === 0 ? (
-        <p>No Cars</p>
+        <p>No Cars Available</p> // Добавлено сообщение, если машин нет
       ) : (
         <div>
           {cars.slice((currentPage - 1) * 7, currentPage * 7).map((car) => (
