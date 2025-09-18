@@ -1,3 +1,6 @@
+import React from 'react';
+import useRaceStore from '../store/raceStore';
+
 // Pagination component
 interface PaginationProps {
   currentPage: number;
@@ -6,27 +9,33 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+  const { paginationState, setPaginationState } = useRaceStore();
+
   const handlePrevious = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
+    if (paginationState.currentPage > 1) {
+      const newPage = paginationState.currentPage - 1;
+      setPaginationState({ currentPage: newPage });
+      onPageChange(newPage);
     }
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages) {
-      onPageChange(currentPage + 1);
+    if (paginationState.currentPage < totalPages) {
+      const newPage = paginationState.currentPage + 1;
+      setPaginationState({ currentPage: newPage });
+      onPageChange(newPage);
     }
   };
 
   return (
     <div className="pagination">
-      <button onClick={handlePrevious} disabled={currentPage === 1}>
+      <button onClick={handlePrevious} disabled={paginationState.currentPage === 1}>
         Previous
       </button>
       <span>
-        Page {currentPage} of {totalPages}
+        Page {paginationState.currentPage} of {totalPages}
       </span>
-      <button onClick={handleNext} disabled={currentPage === totalPages}>
+      <button onClick={handleNext} disabled={paginationState.currentPage === totalPages}>
         Next
       </button>
     </div>

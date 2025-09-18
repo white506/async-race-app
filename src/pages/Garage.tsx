@@ -12,6 +12,7 @@ const Garage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [editingCar, setEditingCar] = useState<Car | null>(null);
   const [winner, setWinner] = useState<string | null>(null);
+  const [isRaceInProgress, setIsRaceInProgress] = useState(false);
 
   const fetchCars = async (page: number) => {
     try {
@@ -65,6 +66,7 @@ const Garage = () => {
   };
 
   const handleStartRace = async () => {
+    setIsRaceInProgress(true);
     try {
       let raceWinner = null;
       for (const car of cars) {
@@ -76,6 +78,8 @@ const Garage = () => {
       setWinner(raceWinner);
     } catch (error) {
       console.error('Error during race:', error);
+    } finally {
+      setIsRaceInProgress(false);
     }
   };
 
@@ -93,8 +97,8 @@ const Garage = () => {
     <div>
       <h1>Garage</h1>
       {winner && <div className="winner-banner">Winner: {winner}</div>}
-      <button onClick={handleStartRace}>Start Race</button>
-      <button onClick={handleResetRace}>Reset Race</button>
+      <button onClick={handleStartRace} disabled={isRaceInProgress}>Start Race</button>
+      <button onClick={handleResetRace} disabled={isRaceInProgress}>Reset Race</button>
       <CarForm onSubmit={editingCar ? handleUpdate : handleCreate} initialData={editingCar || undefined} />
       {cars.length === 0 ? (
         <p>No Cars Available</p> // Добавлено сообщение, если машин нет
