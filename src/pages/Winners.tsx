@@ -1,7 +1,13 @@
 import React from 'react';
+import WinnersTable from '../components/WinnersTable';
 
 const Winners = () => {
-  return <div>Winners Page</div>;
+  return (
+    <div>
+      <h1>Winners Page</h1>
+      <WinnersTable />
+    </div>
+  );
 };
 
 export default Winners;
