@@ -48,7 +48,15 @@ const Garage = () => {
   const handleDelete = async (id: number) => {
     try {
       await deleteCar(id);
-      fetchCars(currentPage);
+      const updatedCars = cars.filter((car) => car.id !== id);
+      setCars(updatedCars);
+
+      // Если удалена последняя машина на странице, перейти на предыдущую страницу
+      if (updatedCars.length === 0 && currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+      } else {
+        fetchCars(currentPage);
+      }
     } catch (error) {
       console.error('Error deleting car:', error);
     }

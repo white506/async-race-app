@@ -4,7 +4,7 @@ interface CarFormProps {
   initialData?: { name: string; color: string };
 }
 
-const CarForm = () => {
+const CarForm: React.FC<CarFormProps> = ({ onSubmit, initialData }) => {
   return <div>CarForm Component</div>;
 };
 

@@ -6,7 +6,7 @@ interface CarRowProps {
   onDelete: () => void;
 }
 
-const CarRow = () => {
+const CarRow: React.FC<CarRowProps> = ({ name, color, onEdit, onDelete }) => {
   return <div>CarRow Component</div>;
 };
 
