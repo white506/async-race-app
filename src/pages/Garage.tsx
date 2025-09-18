@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getCars, createCar, updateCar, deleteCar } from '../api/cars';
+import { startEngine, stopEngine, driveEngine } from '../api/engine';
 import CarForm from '../components/CarForm';
 import CarRow from '../components/CarRow';
 import Pagination from '../components/Pagination';
@@ -10,6 +11,7 @@ const Garage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [editingCar, setEditingCar] = useState<Car | null>(null);
+  const [winner, setWinner] = useState<string | null>(null);
 
   const fetchCars = async (page: number) => {
     try {
@@ -62,9 +64,37 @@ const Garage = () => {
     }
   };
 
+  const handleStartRace = async () => {
+    try {
+      let raceWinner = null;
+      for (const car of cars) {
+        const driveResult = await driveEngine(car.id);
+        if (driveResult.success && !raceWinner) {
+          raceWinner = car.name;
+        }
+      }
+      setWinner(raceWinner);
+    } catch (error) {
+      console.error('Error during race:', error);
+    }
+  };
+
+  const handleResetRace = async () => {
+    try {
+      for (const car of cars) {
+        await stopEngine(car.id);
+      }
+    } catch (error) {
+      console.error('Error resetting race:', error);
+    }
+  };
+
   return (
     <div>
       <h1>Garage</h1>
+      {winner && <div className="winner-banner">Winner: {winner}</div>}
+      <button onClick={handleStartRace}>Start Race</button>
+      <button onClick={handleResetRace}>Reset Race</button>
       <CarForm onSubmit={editingCar ? handleUpdate : handleCreate} initialData={editingCar || undefined} />
       {cars.length === 0 ? (
         <p>No Cars Available</p> // Добавлено сообщение, если машин нет

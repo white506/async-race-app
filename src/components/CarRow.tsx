@@ -1,5 +1,6 @@
 // CarRow component
 import { startEngine, stopEngine } from '../api/engine';
+import { useState } from 'react';
 
 interface CarRowProps {
   name: string;
@@ -9,8 +10,11 @@ interface CarRowProps {
 }
 
 const CarRow: React.FC<CarRowProps> = ({ name, color, onEdit, onDelete }) => {
+  const [isAnimating, setIsAnimating] = useState(false);
+
   const handleStart = async () => {
     try {
+      setIsAnimating(true);
       await startEngine(1); // Здесь нужно передать реальный ID машины
       console.log('Engine started');
     } catch (error) {
@@ -20,6 +24,7 @@ const CarRow: React.FC<CarRowProps> = ({ name, color, onEdit, onDelete }) => {
 
   const handleStop = async () => {
     try {
+      setIsAnimating(false);
       await stopEngine(1); // Здесь нужно передать реальный ID машины
       console.log('Engine stopped');
     } catch (error) {
@@ -30,10 +35,11 @@ const CarRow: React.FC<CarRowProps> = ({ name, color, onEdit, onDelete }) => {
   return (
     <div style={{ backgroundColor: color }}>
       <span>{name}</span>
-      <button onClick={handleStart}>Start</button>
-      <button onClick={handleStop}>Stop</button>
+      <button onClick={handleStart} disabled={isAnimating}>Start</button>
+      <button onClick={handleStop} disabled={!isAnimating}>Stop</button>
       <button onClick={onEdit}>Edit</button>
       <button onClick={onDelete}>Delete</button>
+      {isAnimating && <div className="car-animation">Animating...</div>}
     </div>
   );
 };
